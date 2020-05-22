@@ -22,7 +22,8 @@ module.exports = override(
   addWebpackAlias({
     Components: path.resolve(__dirname, "src/components"),
     Pages: path.resolve(__dirname, "src/pages"),
-    Stores: path.resolve(__dirname, "src/stores")
+    Stores: path.resolve(__dirname, "src/stores"),
+    Config: path.resolve(__dirname, "src/config")
   }),
 
   // adjust the underlying workbox
