@@ -1,4 +1,6 @@
-const getFiles = (function() {
+import forEach from 'lodash/forEach';
+
+const getFiles = (function () {
   let getFilename, isJs, nodeFs, nodePath;
   nodePath = require('path');
   nodeFs = require('fs');
@@ -10,9 +12,9 @@ const getFiles = (function() {
     return [filename, extname];
   };
 
-  isJs = extendName => extendName === '.js';
-  
-  return async function(path, cb) {
+  isJs = (extendName) => extendName === '.js';
+
+  return async function (path, cb) {
     let extendName, filename, filenameArray;
     if (typeof path !== 'string' || !path) {
       return null;
@@ -32,23 +34,23 @@ const getFiles = (function() {
     }
     let files = null;
     if (nodeFs.lstatSync(path).isDirectory()) {
-      const filenames = await nodeFs.readdirSync(path)
-      files = filenames.reduce(async function(result, filename) {
+      const filenames = await nodeFs.readdirSync(path);
+      files = [];
+      forEach(filenames, async (filename) => {
         let fullPath, stat;
-        fullPath = nodePath.resolve(path + "/" + filename);
+        fullPath = nodePath.resolve(path + '/' + filename);
         filenameArray = await getFilename(fullPath);
         filename = filenameArray[0];
         extendName = filenameArray[1];
         stat = nodeFs.lstatSync(fullPath);
         if (stat === void 0) {
-          return result;
+          return true;
         }
         if (!isJs(extendName)) {
-          return result;
+          return true;
         }
-        result.push({path: fullPath, filename});
-        return result;
-      }, []);
+        files.push({path: fullPath, filename});
+      });
     }
     return files;
   };

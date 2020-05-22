@@ -4,16 +4,18 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "node lib/server.js",
     "build": "babel src -d lib",
+    "server": "npm run build && nodemon lib/server.js",
     "lint:fix": "eslint src/*.js --fix",
     "lint": "eslint src/*.js",
     "prettify": "prettier src/*.js --write",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha --require @babel/register './test/**/*.spec.js'",
+    "test:file": "NODE_ENV=test mocha --require @babel/register"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged  --allow-empty"
     }
   },
   "lint-staged": {
@@ -25,6 +27,8 @@
   "author": "malikid.chang@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@babel/runtime": "^7.9.2",
+    "body-parser": "^1.19.0",
     "express": "4.17.1",
     "lodash": "4.17.15",
     "nodemon": "2.0.2"
@@ -33,13 +37,16 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/register": "^7.9.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
+    "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.9",
+    "mocha": "^7.1.1",
     "prettier": "^2.0.2"
   },
   "engines": {
