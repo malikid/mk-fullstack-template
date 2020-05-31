@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
@@ -12,6 +13,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 // parse application/json
 app.use(bodyParser.json());
+
+if (process.env.NODE_ENV === 'production') {
+  var clientBuildDir = path.join(__dirname, '../../client/build');
+  app.use(express.static(clientBuildDir));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(clientBuildDir, 'index.html'));
+  });
+}
 
 require('./config/init')(app);
 
